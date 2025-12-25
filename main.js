@@ -3,12 +3,11 @@ const list = document.querySelector("#list");
 // const taskname = document.forms["in-text"];
 const taskvalue = document.querySelector("#add-task");
 
-
 // console.log(taskvalue.value) ;  just for checking
 
 addbutton.addEventListener("click", function (e) {
   if (taskvalue.value == "") {
-    return
+    return;
   } else {
     //creating list
     const li = document.createElement("li");
@@ -22,11 +21,11 @@ addbutton.addEventListener("click", function (e) {
     check.addEventListener("change", (e) => {
       if (e.target.checked) {
         li.classList.add("done");
-        counter() ;
+        counter();
         storingTasks();
       } else {
         li.classList.remove("done");
-        counter() ;
+        counter();
         storingTasks();
       }
     });
@@ -43,7 +42,7 @@ addbutton.addEventListener("click", function (e) {
 
     dltbtn.addEventListener("click", (e) => {
       li.remove();
-      counter() ;
+      counter();
       storingTasks();
     });
 
@@ -52,57 +51,100 @@ addbutton.addEventListener("click", function (e) {
     li.appendChild(span);
     li.appendChild(dltbtn);
     list.appendChild(li);
-    counter() ;
+    counter();
     storingTasks();
 
     taskvalue.value = "";
   }
 });
 
-// enter key logic 
-// taskvalue.addEventListener("keydown", function (e) {
-//     if (e.key === "Enter") {
-//         addbutton.click();
-//     }
-// });
+// enter key logic
+taskvalue.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    addbutton.click();
+  }
+});
 
-const totalTaskCount = document.querySelector('#totalcount');
-const completedTaskCount = document.querySelector('#completedcount') ;
+const totalTaskCount = document.querySelector("#totalcount");
+const completedTaskCount = document.querySelector("#completedcount");
 
 function counter() {
-    const totalTask = document.querySelectorAll('.task-list').length ;
-    const completedTask = document.querySelectorAll('.done').length ;
+  const totalTask = document.querySelectorAll(".task-list").length;
+  const completedTask = document.querySelectorAll(".done").length;
 
-    totalTaskCount.textContent = totalTask ;
-    completedTaskCount.textContent = completedTask ;
+  totalTaskCount.textContent = totalTask;
+  completedTaskCount.textContent = completedTask;
 }
 
+const clearCompleted = document.querySelector("#clearbtn");
 
-const clearCompleted = document.querySelector('#clearbtn') ;
+clearCompleted.addEventListener("click", (e) => {
+  const completedtask = document.querySelectorAll(".done");
 
-clearCompleted.addEventListener('click' ,e =>{
-    const completedtask = document.querySelectorAll('.done') ;
+  Array.from(completedtask).forEach((e) => {
+    e.remove();
+  });
 
-    Array.from(completedtask).forEach(e =>{
-        e.remove();
-    })
+  counter();
+  storingTasks();
+});
 
-    counter() ;
-    storingTasks() ;
-})
+function storingTasks() {
+  const tasks = [];
 
-function storingTasks(){
-    const allTasks=[];
-    const taskItem = document.querySelectorAll(".task-list");
-    taskItem.forEach(function(element){
-        const text = element.querySelector(".task-text").textContent;
-        // const stateCompleted = element.classList.contains("completed");
-        const completed = element.classList.contains("done");
+  const totalTasks = document.querySelectorAll(".task-list");
+  Array.from(totalTasks).forEach((e) => {
+    tasks.push({
+      text: e.querySelector(".task-text").textContent,
+      completed: e.classList.contains("done"),
+    });
+  });
 
-        allTasks.push({text , completed});
-    })
-
-    localStorage.setItem("allTasks",JSON.stringify(allTasks));
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+function loadTasks() {
+  const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
+  savedTasks.forEach((task) => createTask(task.text, task.completed));
+}
+
+function createTask(text, completed = false) {
+  const li = document.createElement("li");
+  li.classList.add("task-list");
+
+  if (completed) {
+    li.classList.add("done");
+  }
+  
+  const check = document.createElement("input");
+  check.type = "checkbox";
+  check.checked = completed;
+
+  check.addEventListener("change", () => {
+    li.classList.toggle("done");
+    counter();
+    storingTasks();
+  });
+
+  const span = document.createElement("span");
+  span.classList.add("task-text");
+  span.textContent = text;
+
+  const dltbtn = document.createElement("button");
+  dltbtn.textContent = "Delete";
+  dltbtn.classList.add("task-delete-btn");
+
+  dltbtn.addEventListener("click", () => {
+    li.remove();
+    counter();
+    storingTasks();
+  });
+
+  li.append(check, span, dltbtn);
+  list.appendChild(li);
+
+  counter();
+}
+
+loadTasks();
