@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ToDo List</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <header>
+        <h1 class="title">Task Tracker</h1>
+        <p>keep track of all your tasks</p>
+      </header>
+
+
+
+      <div id="input">
+        <form>
+          <input  id="add-task" type="text" placeholder="Enter your Task" >
+          </form>
+        </form>
+        <button id="addbtn" class="btn">add</button>
+        <button id="clearbtn" class="btn">clear completed</button>
+      </div>
+
+      <div id="count">
+        <h3 > total task : <span id="totalcount" > 0</span>  </h3>
+        <h3 > completed task : <span id="completedcount"> 0</span>  </h3>
+      </div>
+
+
+
+        <ul id="list">
+          <!-- <li class="task-list">
+            <input class="task-checkbox" type="checkbox" />
+            <span class="task-text"> hello </span>
+            <button class="task-delete-btn">Delete</button>
+          </li> -->
+        </ul>
+      
+
+
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
